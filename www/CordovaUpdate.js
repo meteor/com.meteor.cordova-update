@@ -24,5 +24,9 @@ corhttpd_exports.setLocalPath = function (path, success, error) {
   exec(success, error, "METEORCordovaUpdate", "setLocalPath", [path]);
 };
 
+corhttpd_exports.getCordovajsRoot = function (success, error) {
+  exec(success, error, "METEORCordovaUpdate", "getCordovajsRoot", []);
+};
+
 module.exports = corhttpd_exports;
 
