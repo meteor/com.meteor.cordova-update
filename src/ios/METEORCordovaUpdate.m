@@ -8,18 +8,35 @@
 @interface METEORCordovaUpdate : CDVPlugin {
 }
 
-//- (void)getCordovajsRoot:(CDVInvokedUrlCommand*)command;
+- (void)startServing:(CDVInvokedUrlCommand*)command;
+- (void)setLocalPath:(CDVInvokedUrlCommand*)command;
+
 
 @end
 
+NSString *METEORDocumentRoot;
+NSString *METEORCordovajsRoot;
+
 @implementation MeteorCordovaUpdate
 
--(id)init {
-  if (self = [super init]) {
-    [NSURLProtocol registerClass:[RNCachingURLProtocol class]];
-  }
+- (void)pluginInitialize
+{
+}
 
-  return self;
+- (void)startServing:(CDVInvokedUrlCommand*)command
+{
+  METEORDocumentRoot = [command.arguments objectAtIndex:0];
+  METEORCorodvajsRoot = [command.arguments objectAtIndex:1];
+
+  [NSURLProtocol registerClass:[METEORCordovaURLProtocol class]];
+
+  [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"meteor.local"] callbackId:command.callbackId];
+}
+
+- (void)setLocalPath:(CDVInvokedUrlCommand*)command
+{
+  METEORDocumentRoot = [command.arguments objectAtIndex:0];
+  [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"meteor.local"] callbackId:command.callbackId];
 }
 
 @end
