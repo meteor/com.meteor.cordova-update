@@ -1,5 +1,8 @@
 #import "METEORCordovaURLProtocol.h"
 
+NSString *METEORDocumentRoot;
+NSString *METEORCordovajsRoot;
+
 @protocol METEORCordovaURLProtocol
 
 - (NSString *)filePathForURI:(NSString *)path allowDirectory:(BOOL)allowDirectory;
@@ -37,6 +40,8 @@
   }
 
   NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:filePath]];
+
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[[self request] URL] statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:@{}];
 
   [[self client] URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed]; // we handle caching ourselves.
   [[self client] URLProtocol:self didLoadData:data];

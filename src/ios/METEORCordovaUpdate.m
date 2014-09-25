@@ -15,7 +15,7 @@
 extern NSString *METEORDocumentRoot;
 extern NSString *METEORCordovajsRoot;
 
-@implementation MeteorCordovaUpdate
+@implementation METEORCordovaUpdate
 
 - (void)pluginInitialize
 {
