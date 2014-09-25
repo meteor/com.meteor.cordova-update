@@ -1,8 +1,6 @@
 /********* com.meteor.cordova-update Cordova Plugin Implementation *******/
 
 #import <Cordova/CDV.h>
-#import "DDLog.h"
-#import "DDTTYLogger.h"
 #import "METEORCordovaURLProtocol.h"
 
 @interface METEORCordovaUpdate : CDVPlugin {
@@ -14,8 +12,8 @@
 
 @end
 
-NSString *METEORDocumentRoot;
-NSString *METEORCordovajsRoot;
+extern NSString *METEORDocumentRoot;
+extern NSString *METEORCordovajsRoot;
 
 @implementation MeteorCordovaUpdate
 

@@ -1,6 +1,6 @@
 #import "METEORCordovaURLProtocol.h"
 
-@protocol METEORCordovaURLProtocol ()
+@protocol METEORCordovaURLProtocol
 
 - (NSString *)filePathForURI:(NSString *)path allowDirectory:(BOOL)allowDirectory;
 
@@ -61,7 +61,6 @@
   NSURL *docRoot = [NSURL fileURLWithPath:documentRoot isDirectory:YES];
   if (docRoot == nil)
   {
-    HTTPLogWarn(@"%@[%p]: Document root is invalid file path", THIS_FILE, self);
     return nil;
   }
 
@@ -97,7 +96,6 @@
 
   if (![fullPath hasPrefix:documentRoot])
   {
-    HTTPLogWarn(@"%@[%p]: Request for file outside document root", THIS_FILE, self);
     return nil;
   }
 
