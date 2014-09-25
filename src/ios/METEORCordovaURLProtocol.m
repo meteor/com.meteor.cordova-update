@@ -6,6 +6,7 @@ NSString *METEORCordovajsRoot;
 @protocol METEORCordovaURLProtocol
 
 - (NSString *)filePathForURI:(NSString *)path allowDirectory:(BOOL)allowDirectory;
+- (NSArray *)directoryIndexFileNames;
 
 @end
 
@@ -132,6 +133,11 @@ NSString *METEORCordovajsRoot;
     return [[METEORCordovajsRoot stringByAppendingPathComponent:path] stringByStandardizingPath];
 
   return fullPath;
+}
+
+- (NSArray *)directoryIndexFileNames
+{
+  return [NSArray arrayWithObjects:@"index.html", @"index.htm", nil];
 }
 
 @end
