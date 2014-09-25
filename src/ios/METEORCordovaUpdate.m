@@ -24,7 +24,7 @@ extern NSString *METEORCordovajsRoot;
 - (void)startServing:(CDVInvokedUrlCommand*)command
 {
   METEORDocumentRoot = [command.arguments objectAtIndex:0];
-  METEORCorodvajsRoot = [command.arguments objectAtIndex:1];
+  METEORCordovajsRoot = [command.arguments objectAtIndex:1];
 
   [NSURLProtocol registerClass:[METEORCordovaURLProtocol class]];
 
