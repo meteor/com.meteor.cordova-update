@@ -21,6 +21,22 @@
   </js-module>
 
   <platform name="android">
+    <config-file parent="/*" target="res/xml/config.xml">
+      <feature name="CordovaUpdate">
+        <param name="android-package" value="com.meteor.cordova.updater.CordovaUpdatePlugin" />
+      </feature>
+    </config-file>
+
+    <config-file target="AndroidManifest.xml" parent="/*">
+      <uses-permission android:name="android.permission.INTERNET" />
+      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    </config-file>
+
+    <source-file src="src/android/com/meteor/cordova/updater/CordovaUpdatePlugin.java" target-dir="src/com/meteor/cordova/updater" />
+    <source-file src="src/android/com/meteor/cordova/updater/FilesystemUriRemapper.java" target-dir="src/com/meteor/cordova/updater" />
+    <source-file src="src/android/com/meteor/cordova/updater/ResourceUriRemapper.java" target-dir="src/com/meteor/cordova/updater" />
+    <source-file src="src/android/com/meteor/cordova/updater/UriRemapper.java" target-dir="src/com/meteor/cordova/updater" />
+    <source-file src="src/android/com/meteor/cordova/updater/WebHelpers.java" target-dir="src/com/meteor/cordova/updater" />
   </platform>
 
   <platform name="ios">
