@@ -36,6 +36,10 @@ public class Asset {
         assert !path.endsWith("/");
     }
 
+    public boolean hasChildren() {
+        return !getChildren().isEmpty();
+    }
+
     public List<Asset> getChildren() {
         if (this.children == null) {
             List<Asset> children;

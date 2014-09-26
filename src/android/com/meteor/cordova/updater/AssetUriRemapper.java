@@ -24,12 +24,21 @@ public class AssetUriRemapper implements UriRemapper {
         // String assetPath = assetBase.path + path;
         // Log.d(TAG, "Asset path is " + assetBase.path + path);
 
-        if (assetBase.exists(path)) {
-            Log.d(TAG, "Remapping to " + "file:///android_asset/" + assetBase.path + "/" + path);
-            return Uri.parse("file:///android_asset/" + assetBase.path + "/" + path);
+        Asset asset = assetBase.find(path);
+        if (asset == null) {
+            // No such asset
+            return null;
         }
 
-        return null;
+        // Don't serve directories.
+        // XXX: It is annoying that we have to do a (slow) asset-manager call here
+        if (asset.hasChildren()) {
+            Log.d(TAG, "Found asset, but was directory: " + assetBase.path + "/" + path);
+            return null;
+        }
+
+        Log.d(TAG, "Remapping to " + "file:///android_asset/" + assetBase.path + "/" + path);
+        return Uri.parse("file:///android_asset/" + assetBase.path + "/" + path);
     }
 
     // private boolean assetExists(String assetPath) {
