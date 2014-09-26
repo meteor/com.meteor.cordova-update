@@ -13,6 +13,8 @@ public class AssetUriRemapper implements UriRemapper {
 
     static final Set<String> KNOWN_FILE_EXTENSIONS;
 
+    private boolean assumeFilesArePresent;
+
     static {
         KNOWN_FILE_EXTENSIONS = new HashSet<String>();
 
@@ -34,8 +36,9 @@ public class AssetUriRemapper implements UriRemapper {
         KNOWN_FILE_EXTENSIONS.add("json");
     }
 
-    public AssetUriRemapper(Asset assetBase) {
+    public AssetUriRemapper(Asset assetBase, boolean assumeFilesArePresent) {
         this.assetBase = assetBase;
+        this.assumeFilesArePresent = assumeFilesArePresent;
 
         if (assetBase == null) {
             throw new IllegalArgumentException();
@@ -51,8 +54,10 @@ public class AssetUriRemapper implements UriRemapper {
             path = path.substring(1);
         }
 
-        // String assetPath = assetBase.path + path;
-        // Log.d(TAG, "Asset path is " + assetBase.path + path);
+        if (assumeFilesArePresent && looksLikeFile(path)) {
+            Uri assetUri = Uri.parse("file:///android_asset/" + assetBase.path + "/" + path);
+            return new Remapped(assetUri, true);
+        }
 
         Asset asset = assetBase.find(path);
         if (asset == null) {

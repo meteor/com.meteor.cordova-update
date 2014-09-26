@@ -171,7 +171,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
                     Log.w(TAG, "Could not find asset: " + wwwRoot + ", default to asset root");
                     wwwAsset = getAssetRoot();
                 }
-                appRemapper = new AssetUriRemapper(wwwAsset);
+                appRemapper = new AssetUriRemapper(wwwAsset, true);
             }
 
             // XXX HACKHACK serve cordova.js from the containing folder
@@ -180,7 +180,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
                 Log.w(TAG, "Could not find asset: " + cordovajsRoot + ", default to www root");
                 cordovaAssetBase = getAssetRoot();
             }
-            final AssetUriRemapper cordovaRemapper = new AssetUriRemapper(cordovaAssetBase);
+            final AssetUriRemapper cordovaRemapper = new AssetUriRemapper(cordovaAssetBase, true);
 
             UriRemapper cordovaUriRemapper = new UriRemapper() {
                 @Override
