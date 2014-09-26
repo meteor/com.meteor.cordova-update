@@ -15,13 +15,13 @@ public class FilesystemUriRemapper implements UriRemapper {
     }
 
     @Override
-    public Uri remapUri(Uri uri) {
+    public Remapped remapUri(Uri uri) {
         String path = uri.getPath();
         File file = new File(base, path);
         Log.d(TAG, "Checking for file: " + file);
         if (!file.exists()) {
             return null;
         }
-        return Uri.fromFile(file);
+        return new Remapped(Uri.fromFile(file), file.isDirectory());
     }
 }

@@ -43,7 +43,7 @@ public class AssetUriRemapper implements UriRemapper {
     }
 
     @Override
-    public Uri remapUri(Uri uri) {
+    public Remapped remapUri(Uri uri) {
         String path = uri.getPath();
 
         assert path.startsWith("/");
@@ -68,17 +68,17 @@ public class AssetUriRemapper implements UriRemapper {
             extension = path.substring(lastDot + 1);
         }
 
+        boolean isDirectory = false;
         if (extension != null && KNOWN_FILE_EXTENSIONS.contains(extension)) {
             Log.d(TAG, "Assuming not a directory: " + path);
         } else {
             if (asset.hasChildren()) {
-                Log.d(TAG, "Found asset, but was directory: " + assetBase.path + "/" + path);
-                return null;
+                isDirectory = true;
             }
         }
 
-        Log.d(TAG, "Remapping to " + "file:///android_asset/" + assetBase.path + "/" + path);
-        return Uri.parse("file:///android_asset/" + assetBase.path + "/" + path);
+        Uri assetUri = Uri.parse("file:///android_asset/" + assetBase.path + "/" + path);
+        return new Remapped(assetUri, isDirectory);
     }
     // private boolean assetExists(String assetPath) {
     // InputStream is = null;

@@ -13,6 +13,8 @@ import org.apache.cordova.PluginResult.Status;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.meteor.cordova.updater.UriRemapper.Remapped;
+
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.net.Uri;
@@ -59,30 +61,43 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
             remappers = this.remappers;
         }
 
-        for (UriRemapper remapper : remappers) {
-            Uri remapped = remapper.remapUri(uri);
-            if (remapped != null) {
-                return remapped;
+        Remapped remapped = remap(uri);
+
+        if (remapped != null) {
+            if (remapped.isDirectory) {
+                Log.d(TAG, "Found asset, but was directory: " + remapped.uri);
+            } else {
+                Log.d(TAG, "Remapping to " + remapped.uri);
+                return remapped.uri;
             }
         }
 
-        // XXX: <dir> -> <dir>/ redirection
-
         // Serve defaultPage if directory
-        if (uri.getPath().endsWith("/")) {
+        if (remapped != null && remapped.isDirectory) {
             Uri defaultPage = Uri.withAppendedPath(uri, DEFAULT_PAGE);
 
-            for (UriRemapper remapper : remappers) {
-                Uri remapped = remapper.remapUri(defaultPage);
-                if (remapped != null) {
-                    return remapped;
-                }
+            remapped = remap(defaultPage);
+            if (remapped.isDirectory) {
+                Log.d(TAG, "Found asset, but was directory: " + remapped.uri);
+            } else {
+                Log.d(TAG, "Remapping to " + remapped.uri);
+                return remapped.uri;
             }
         }
 
         // No remapping; return unaltered
         Log.d(TAG, "No remapping for " + uri);
         return uri;
+    }
+
+    private Remapped remap(Uri uri) {
+        for (UriRemapper remapper : remappers) {
+            Remapped remapped = remapper.remapUri(uri);
+            if (remapped != null) {
+                return remapped;
+            }
+        }
+        return null;
     }
 
     private static final String ACTION_START_SERVER = "startServer";
