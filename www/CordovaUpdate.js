@@ -17,15 +17,15 @@ corhttpd_exports.startServing = function(options, success, error) {
     }
   }
 
-  exec(success, error, "METEORCordovaUpdate", "startServer", [ defaults['www_root'], defaults['cordovajs_root'] ]);
+  exec(success, error, "CordovaUpdate", "startServer", [ defaults['www_root'], defaults['cordovajs_root'] ]);
 };
 
 corhttpd_exports.setLocalPath = function (path, success, error) {
-  exec(success, error, "METEORCordovaUpdate", "setLocalPath", [path]);
+  exec(success, error, "CordovaUpdate", "setLocalPath", [path]);
 };
 
 corhttpd_exports.getCordovajsRoot = function (success, error) {
-  exec(success, error, "METEORCordovaUpdate", "getCordovajsRoot", []);
+  exec(success, error, "CordovaUpdate", "getCordovajsRoot", []);
 };
 
 module.exports = corhttpd_exports;
