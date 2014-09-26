@@ -4,7 +4,7 @@
 
 #import "METEORCordovaURLProtocol.h"
 
-@interface METEORCordovaUpdate : CDVPlugin {
+@interface CordovaUpdate : CDVPlugin {
 }
 
 - (void)startServing:(CDVInvokedUrlCommand*)command;
@@ -16,7 +16,7 @@
 extern NSString *METEORDocumentRoot;
 extern NSString *METEORCordovajsRoot;
 
-@implementation METEORCordovaUpdate
+@implementation CordovaUpdate
 
 - (void)pluginInitialize
 {

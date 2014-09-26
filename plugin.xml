@@ -26,11 +26,11 @@
   <platform name="ios">
     <config-file parent="/*" target="config.xml">
       <feature name="CordovaUpdate">
-        <param name="ios-package" value="METEORCordovaUpdate" />
+        <param name="ios-package" value="CordovaUpdate" />
       </feature>
     </config-file>
 
-    <source-file src="src/ios/METEORCordovaUpdate.m" />
+    <source-file src="src/ios/CordovaUpdate.m" />
     <header-file src="src/ios/METEORCordovaURLProtocol.h" />
     <source-file src="src/ios/METEORCordovaURLProtocol.m" />
 
