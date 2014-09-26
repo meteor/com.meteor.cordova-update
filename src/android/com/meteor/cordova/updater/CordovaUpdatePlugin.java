@@ -41,7 +41,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
         Log.d(TAG, "remapUri " + uri);
 
         String scheme = uri.getScheme();
-        if (scheme == null || !schemes.contain(scheme)) {
+        if (scheme == null || !schemes.contains(scheme)) {
             Log.d(TAG, "Scheme is not intercepted: " + scheme);
             return uri;
         }
