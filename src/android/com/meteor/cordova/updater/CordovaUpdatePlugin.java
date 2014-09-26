@@ -184,7 +184,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
 
             UriRemapper cordovaUriRemapper = new UriRemapper() {
                 @Override
-                public Uri remapUri(Uri uri) {
+                public Remapped remapUri(Uri uri) {
                     String path = uri.getPath();
 
                     // if ([path isEqualToString:@"/cordova.js"] || [path isEqualToString:@"/cordova_plugins.js"] ||
@@ -193,7 +193,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
                     if (path.equals("/cordova.js") || path.equals("/cordova_plugins.js")
                             || path.startsWith("/plugins/")) {
                         Log.d(TAG, "Detected cordova URI: " + uri);
-                        Uri remapped = cordovaRemapper.remapUri(uri);
+                        Remapped remapped = cordovaRemapper.remapUri(uri);
                         if (remapped == null) {
                             Log.w(TAG, "Detected cordova URI, but resource remap failed: " + uri);
                         }
