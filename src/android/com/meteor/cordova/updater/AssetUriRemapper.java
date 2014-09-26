@@ -1,5 +1,8 @@
 package com.meteor.cordova.updater;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import android.net.Uri;
 import android.util.Log;
 
@@ -8,8 +11,32 @@ public class AssetUriRemapper implements UriRemapper {
 
     final Asset assetBase;
 
+    static final Set<String> KNOWN_FILE_EXTENSIONS;
+
+    static {
+        KNOWN_FILE_EXTENSIONS = new HashSet<String>();
+
+        KNOWN_FILE_EXTENSIONS.add("htm");
+        KNOWN_FILE_EXTENSIONS.add("html");
+
+        KNOWN_FILE_EXTENSIONS.add("js");
+
+        KNOWN_FILE_EXTENSIONS.add("css");
+
+        KNOWN_FILE_EXTENSIONS.add("map");
+
+        KNOWN_FILE_EXTENSIONS.add("ico");
+        KNOWN_FILE_EXTENSIONS.add("png");
+        KNOWN_FILE_EXTENSIONS.add("jpg");
+        KNOWN_FILE_EXTENSIONS.add("jpeg");
+        KNOWN_FILE_EXTENSIONS.add("gif");
+
+        KNOWN_FILE_EXTENSIONS.add("json");
+    }
+
     public AssetUriRemapper(Asset assetBase) {
         this.assetBase = assetBase;
+
     }
 
     @Override
@@ -31,9 +58,14 @@ public class AssetUriRemapper implements UriRemapper {
         }
 
         // Don't serve directories.
-        // hasChildren is slow... so we use some heuristics
-        if (path.endsWith(".js") || path.endsWith(".js.map") || path.endsWith(".html") || path.endsWith(".css")
-                || path.endsWith(".css.map")) {
+        // hasChildren is slow... so we use some heuristics first
+        int lastDot = path.lastIndexOf('.');
+        String extension = null;
+        if (lastDot != -1) {
+            extension = path.substring(lastDot + 1);
+        }
+
+        if (extension != null && KNOWN_FILE_EXTENSIONS.contains(extension)) {
             Log.d(TAG, "Assuming not a directory: " + path);
         } else {
             if (asset.hasChildren()) {
@@ -45,7 +77,6 @@ public class AssetUriRemapper implements UriRemapper {
         Log.d(TAG, "Remapping to " + "file:///android_asset/" + assetBase.path + "/" + path);
         return Uri.parse("file:///android_asset/" + assetBase.path + "/" + path);
     }
-
     // private boolean assetExists(String assetPath) {
     // InputStream is = null;
     // try {
