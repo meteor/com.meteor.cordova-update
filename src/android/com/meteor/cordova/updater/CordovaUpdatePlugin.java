@@ -140,7 +140,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
 
         this.updateLocations(wwwRoot, cordovaRoot);
 
-        return DEFAULT_HOST;
+        return "http://" + DEFAULT_HOST;
     }
 
 }
