@@ -62,14 +62,8 @@ public class AssetUriRemapper implements UriRemapper {
 
         // Don't serve directories.
         // hasChildren is slow... so we use some heuristics first
-        int lastDot = path.lastIndexOf('.');
-        String extension = null;
-        if (lastDot != -1) {
-            extension = path.substring(lastDot + 1);
-        }
-
         boolean isDirectory = false;
-        if (extension != null && KNOWN_FILE_EXTENSIONS.contains(extension)) {
+        if (looksLikeFile(path)) {
             Log.d(TAG, "Assuming not a directory: " + path);
         } else {
             if (asset.hasChildren()) {
@@ -80,6 +74,7 @@ public class AssetUriRemapper implements UriRemapper {
         Uri assetUri = Uri.parse("file:///android_asset/" + assetBase.path + "/" + path);
         return new Remapped(assetUri, isDirectory);
     }
+
     // private boolean assetExists(String assetPath) {
     // InputStream is = null;
     // try {
@@ -94,5 +89,14 @@ public class AssetUriRemapper implements UriRemapper {
     // }
     // return true;
     // }
+
+    private boolean looksLikeFile(String path) {
+        int lastDot = path.lastIndexOf('.');
+        if (lastDot == -1) {
+            return false;
+        }
+        String extension = path.substring(lastDot + 1);
+        return KNOWN_FILE_EXTENSIONS.contains(extension);
+    }
 
 }
