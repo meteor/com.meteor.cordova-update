@@ -36,7 +36,7 @@
     <source-file src="src/android/com/meteor/cordova/updater/FilesystemUriRemapper.java" target-dir="src/com/meteor/cordova/updater" />
     <source-file src="src/android/com/meteor/cordova/updater/ResourceUriRemapper.java" target-dir="src/com/meteor/cordova/updater" />
     <source-file src="src/android/com/meteor/cordova/updater/UriRemapper.java" target-dir="src/com/meteor/cordova/updater" />
-    <source-file src="src/android/com/meteor/cordova/updater/WebHelpers.java" target-dir="src/com/meteor/cordova/updater" />
+    <source-file src="src/android/com/meteor/cordova/updater/Utils.java" target-dir="src/com/meteor/cordova/updater" />
   </platform>
 
   <platform name="ios">

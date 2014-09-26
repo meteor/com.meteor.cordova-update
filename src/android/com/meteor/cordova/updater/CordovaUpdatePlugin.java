@@ -138,7 +138,11 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
         synchronized (this) {
             List<UriRemapper> remappers = new ArrayList<UriRemapper>();
             remappers.add(new FilesystemUriRemapper(new File(wwwRoot)));
-            remappers.add(new ResourceUriRemapper(assetManager, cordovajsRoot));
+
+            String androidAssetRoot = cordovajsRoot;
+            androidAssetRoot = Utils.stripPrefix(androidAssetRoot, "/android_asset/");
+            androidAssetRoot = Utils.stripPrefix(androidAssetRoot, "/");
+            remappers.add(new ResourceUriRemapper(assetManager, androidAssetRoot));
 
             this.wwwRoot = wwwRoot;
             this.cordovajsRoot = cordovajsRoot;

@@ -1,6 +1,5 @@
 package com.meteor.cordova.updater;
 
-import java.io.Closeable;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,20 +51,9 @@ public class ResourceUriRemapper implements UriRemapper {
             Log.d(TAG, "Error while opening " + assetPath + "(" + e + ")");
             return false;
         } finally {
-            closeQuietly(is);
+            Utils.closeQuietly(is);
         }
         return true;
-    }
-
-    private void closeQuietly(Closeable closeable) {
-        if (closeable == null) {
-            return;
-        }
-        try {
-            closeable.close();
-        } catch (IOException e) {
-            Log.w(TAG, "Error closing: " + closeable, e);
-        }
     }
 
 }
