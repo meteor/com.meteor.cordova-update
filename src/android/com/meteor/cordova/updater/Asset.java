@@ -45,6 +45,8 @@ public class Asset {
             List<Asset> children;
             String[] assets = null;
             try {
+                // This call is slow, so log it
+                Log.d(TAG, "Doing assetManager list on " + path);
                 assets = assetManager.list(path);
             } catch (IOException e) {
                 Log.w(TAG, "Error listing assets at " + path, e);

@@ -43,7 +43,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
 
     @Override
     public Uri remapUri(Uri uri) {
-        Log.d(TAG, "remapUri " + uri);
+        Log.v(TAG, "remapUri " + uri);
 
         String scheme = uri.getScheme();
         if (scheme == null || !schemes.contains(scheme)) {
@@ -192,7 +192,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
                     // return [[METEORCordovajsRoot stringByAppendingPathComponent:path] stringByStandardizingPath];
                     if (path.equals("/cordova.js") || path.equals("/cordova_plugins.js")
                             || path.startsWith("/plugins/")) {
-                        Log.d(TAG, "Detected cordova URI: " + uri);
+                        Log.v(TAG, "Detected cordova URI: " + uri);
                         Remapped remapped = cordovaRemapper.remapUri(uri);
                         if (remapped == null) {
                             Log.w(TAG, "Detected cordova URI, but resource remap failed: " + uri);

@@ -64,7 +64,7 @@ public class AssetUriRemapper implements UriRemapper {
         // hasChildren is slow... so we use some heuristics first
         boolean isDirectory = false;
         if (looksLikeFile(path)) {
-            Log.d(TAG, "Assuming not a directory: " + path);
+            Log.v(TAG, "Assuming not a directory: " + path);
         } else {
             if (asset.hasChildren()) {
                 isDirectory = true;

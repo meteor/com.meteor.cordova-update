@@ -18,7 +18,7 @@ public class FilesystemUriRemapper implements UriRemapper {
     public Remapped remapUri(Uri uri) {
         String path = uri.getPath();
         File file = new File(base, path);
-        Log.d(TAG, "Checking for file: " + file);
+        // Log.d(TAG, "Checking for file: " + file);
         if (!file.exists()) {
             return null;
         }
