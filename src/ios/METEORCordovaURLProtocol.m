@@ -40,19 +40,39 @@ NSString *METEORCordovajsRoot;
     filePath = [self filePathForURI:@"/" allowDirectory:NO];
   }
 
-
-  NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:filePath]];
+  NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+  NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
+  NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithURL:[NSURL fileURLWithPath:filePath]];
 
   NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[[self request] URL] statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:@{}];
 
   [[self client] URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed]; // we handle caching ourselves.
-  [[self client] URLProtocol:self didLoadData:data];
-  [[self client] URLProtocolDidFinishLoading:self];
+
+
+  // fetch the file
+  [downloadTask resume];
 }
 
 - (void)stopLoading
 {
   // No-op
+}
+
+// Implement NSURLSessionDelegate protocol
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location {
+  NSData *data = [NSData dataWithContentsOfURL:location];
+
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [[self client] URLProtocol:self didLoadData:data];
+    [[self client] URLProtocolDidFinishLoading:self];
+  });
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes {
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
 }
 
 /**
