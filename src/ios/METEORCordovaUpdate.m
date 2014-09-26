@@ -1,6 +1,7 @@
 /********* com.meteor.cordova-update Cordova Plugin Implementation *******/
 
 #import <Cordova/CDV.h>
+
 #import "METEORCordovaURLProtocol.h"
 
 @interface METEORCordovaUpdate : CDVPlugin {

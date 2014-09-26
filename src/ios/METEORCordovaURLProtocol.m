@@ -30,6 +30,7 @@ NSString *METEORCordovajsRoot;
 
 - (void)startLoading
 {
+  NSLog(@"startLoading for url %@", [[[self request] URL] absoluteString]);
   NSString *filePath = [self filePathForURI:[[[self request] URL] path] allowDirectory:NO];
 
   BOOL isDir = NO;
@@ -39,6 +40,8 @@ NSString *METEORCordovajsRoot;
   {
     filePath = [self filePathForURI:@"/" allowDirectory:NO];
   }
+
+  NSLog(@"filePath is %@", filePath);
 
   NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:filePath]];
 

@@ -31,7 +31,7 @@
     </config-file>
 
     <source-file src="src/ios/METEORCordovaUpdate.m" />
-    <source-file src="src/ios/METEORCordovaURLProtocol.h" />
+    <header-file src="src/ios/METEORCordovaURLProtocol.h" />
     <source-file src="src/ios/METEORCordovaURLProtocol.m" />
 
     <framework src="Foundation.framework" />
