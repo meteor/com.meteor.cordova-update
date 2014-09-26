@@ -24,6 +24,7 @@ extern NSString *METEORCordovajsRoot;
 
 - (void)startServing:(CDVInvokedUrlCommand*)command
 {
+  NSLog(@"start serving %@", command.arguments);
   METEORDocumentRoot = [command.arguments objectAtIndex:0];
   METEORCordovajsRoot = [command.arguments objectAtIndex:1];
 
