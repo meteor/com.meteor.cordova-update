@@ -24,6 +24,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
     private static final String TAG = "meteor.cordova.updater";
 
     final Set<String> hosts = new HashSet<String>();
+    final Set<String> schemes = new HashSet<String>();
     private List<UriRemapper> remappers = new ArrayList<UriRemapper>();
 
     private String wwwRoot;
@@ -31,12 +32,19 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
 
     public CordovaUpdatePlugin() {
         this.hosts.add(DEFAULT_HOST);
+        this.schemes.add("http");
+        this.schemes.add("https");
     }
 
     @Override
     public Uri remapUri(Uri uri) {
         Log.d(TAG, "remapUri " + uri);
 
+        String scheme = uri.getScheme();
+        if (scheme == null || !schemes.contain(scheme)) {
+            Log.d(TAG, "Scheme is not intercepted: " + scheme);
+            return uri;
+        }
         String host = uri.getHost();
         if (host == null || !hosts.contains(host)) {
             Log.d(TAG, "Host is not intercepted: " + host);
