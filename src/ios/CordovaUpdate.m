@@ -7,7 +7,7 @@
 @interface CordovaUpdate : CDVPlugin {
 }
 
-- (void)startServing:(CDVInvokedUrlCommand*)command;
+- (void)startServer:(CDVInvokedUrlCommand*)command;
 - (void)setLocalPath:(CDVInvokedUrlCommand*)command;
 
 
@@ -22,7 +22,7 @@ extern NSString *METEORCordovajsRoot;
 {
 }
 
-- (void)startServing:(CDVInvokedUrlCommand*)command
+- (void)startServer:(CDVInvokedUrlCommand*)command
 {
   NSLog(@"start serving %@", command.arguments);
   METEORDocumentRoot = [command.arguments objectAtIndex:0];

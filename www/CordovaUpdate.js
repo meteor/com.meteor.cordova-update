@@ -3,7 +3,7 @@ exec = require('cordova/exec');
 
 var corhttpd_exports = {};
 
-corhttpd_exports.startServing = function(options, success, error) {
+corhttpd_exports.startServer = function(options, success, error) {
   var defaults = {
     'www_root': '',
     'cordovajs_root': null
@@ -16,7 +16,7 @@ corhttpd_exports.startServing = function(options, success, error) {
     }
   }
 
-  exec(success, error, "CordovaUpdate", "startServing", [ defaults['www_root'], defaults['cordovajs_root'] ]);
+  exec(success, error, "CordovaUpdate", "startServer", [ defaults['www_root'], defaults['cordovajs_root'] ]);
 };
 
 corhttpd_exports.setLocalPath = function (path, success, error) {
