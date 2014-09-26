@@ -19,9 +19,10 @@ import android.net.Uri;
 import android.util.Log;
 
 public class CordovaUpdatePlugin extends CordovaPlugin {
-    private static final String DEFAULT_HOST = "meteor.local";
-
     private static final String TAG = "meteor.cordova.updater";
+
+    private static final String DEFAULT_HOST = "meteor.local";
+    private static final String DEFAULT_PAGE = "index.html";
 
     final Set<String> hosts = new HashSet<String>();
     final Set<String> schemes = new HashSet<String>();
@@ -55,12 +56,29 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
         synchronized (this) {
             remappers = this.remappers;
         }
+
         for (UriRemapper remapper : remappers) {
             Uri remapped = remapper.remapUri(uri);
             if (remapped != null) {
                 return remapped;
             }
         }
+
+        // XXX: <dir> -> <dir>/ redirection
+
+        // Serve defaultPage if directory
+        if (uri.getPath().endsWith("/")) {
+            Uri defaultPage = Uri.withAppendedPath(uri, DEFAULT_PAGE);
+
+            for (UriRemapper remapper : remappers) {
+                Uri remapped = remapper.remapUri(defaultPage);
+                if (remapped != null) {
+                    return remapped;
+                }
+            }
+        }
+
+        // No remapping; return unaltered
         return uri;
     }
 

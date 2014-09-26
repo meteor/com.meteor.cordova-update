@@ -20,9 +20,9 @@ public class ResourceUriRemapper implements UriRemapper {
         if (assetBase != "" && assetBase.endsWith("/")) {
             assetBase = assetBase.substring(0, assetBase.length() - 1);
         }
-        this.assetBase = assetBase;
 
         this.assetManager = assetManager;
+        this.assetBase = assetBase;
     }
 
     @Override
@@ -35,8 +35,8 @@ public class ResourceUriRemapper implements UriRemapper {
         Log.d(TAG, "Asset path is " + assetPath);
 
         if (assetExists(assetPath)) {
-            Log.d(TAG, "Remapping to " + "file:///android_asset/" + path);
-            return Uri.parse("file:///android_asset/" + path);
+            Log.d(TAG, "Remapping to " + "file:///android_asset/" + assetPath);
+            return Uri.parse("file:///android_asset/" + assetPath);
         }
 
         return null;
