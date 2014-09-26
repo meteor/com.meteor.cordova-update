@@ -136,42 +136,29 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
 
     private void updateLocations(String wwwRoot, String cordovajsRoot) {
         synchronized (this) {
-            FilesystemUriRemapper filesystemUriRemapper = null;
+            UriRemapper appRemapper = null;
+
             File fsRoot = new File(wwwRoot);
             if (fsRoot.exists()) {
-                filesystemUriRemapper = new FilesystemUriRemapper(fsRoot);
-            } else {
-                Log.w(TAG, "Filesystem root not found; won't scan: " + wwwRoot);
-            }
+                appRemapper = new FilesystemUriRemapper(fsRoot);
+                Log.w(TAG, "Filesystem root not found; falling back to assets: " + wwwRoot);
 
-            String androidAssetRoot = cordovajsRoot;
-            androidAssetRoot = Utils.stripPrefix(androidAssetRoot, "/android_asset/");
-            androidAssetRoot = Utils.stripPrefix(androidAssetRoot, "/");
-
-            if (!androidAssetRoot.equals("www")) {
-                androidAssetRoot = "www";
-                Log.w(TAG, "Ignoring provided asset root, using " + androidAssetRoot);
+                Asset wwwAsset = getAssetRoot().find(wwwRoot);
+                if (wwwAsset == null) {
+                    Log.w(TAG, "Could not find asset: " + wwwRoot + ", default to asset root");
+                    wwwAsset = getAssetRoot();
+                }
+                appRemapper = new AssetUriRemapper(wwwAsset);
             }
-
-            // // Make sure assetBase does not end with slash
-            // if (androidAssetRoot.endsWith("/")) {
-            // androidAssetRoot = androidAssetRoot.substring(0, assetBase.length() - 1);
-            // }
-            //
-            // this.assetManager = assetManager;
-            // this.assetBase = new Asset(null, assetBase);
-            //
-            // // For debug...
-            // this.assetBase.dump();
-            String androidAssetPath = wwwRoot;
-            Asset assetDir = getAssetRoot().find(androidAssetPath);
-            if (assetDir == null) {
-                Log.w(TAG, "Could not find asset: " + androidAssetPath + ", default to www");
-                assetDir = getAssetRoot().find("www");
-            }
-            final AssetUriRemapper resourceUriRemapper = new AssetUriRemapper(assetDir);
 
             // XXX HACKHACK serve cordova.js from the containing folder
+            Asset cordovaAssetBase = getAssetRoot().find(cordovajsRoot);
+            if (cordovajsRoot == null) {
+                Log.w(TAG, "Could not find asset: " + cordovajsRoot + ", default to www root");
+                cordovaAssetBase = getAssetRoot();
+            }
+            final AssetUriRemapper cordovaRemapper = new AssetUriRemapper(cordovaAssetBase);
+
             UriRemapper cordovaUriRemapper = new UriRemapper() {
                 @Override
                 public Uri remapUri(Uri uri) {
@@ -183,7 +170,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
                     if (path.equals("/cordova.js") || path.equals("/cordova_plugins.js")
                             || path.startsWith("/plugins/")) {
                         Log.d(TAG, "Detected cordova URI: " + uri);
-                        Uri remapped = resourceUriRemapper.remapUri(uri);
+                        Uri remapped = cordovaRemapper.remapUri(uri);
                         if (remapped == null) {
                             Log.w(TAG, "Detected cordova URI, but resource remap failed: " + uri);
                         }
@@ -194,16 +181,9 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
                 }
             };
 
-            // The precedence order is:
-            // cordova as shipped with app
-            // filesystem hot-code-push files
-            // resources as shipped with app
             List<UriRemapper> remappers = new ArrayList<UriRemapper>();
             remappers.add(cordovaUriRemapper);
-            if (filesystemUriRemapper != null) {
-                remappers.add(filesystemUriRemapper);
-            }
-            remappers.add(resourceUriRemapper);
+            remappers.add(appRemapper);
 
             this.wwwRoot = wwwRoot;
             this.cordovajsRoot = cordovajsRoot;
@@ -216,7 +196,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
             Context ctx = cordova.getActivity().getApplicationContext();
             AssetManager assetManager = ctx.getResources().getAssets();
 
-            this.assetRoot = new Asset(assetManager, "");
+            this.assetRoot = new Asset(assetManager, "www");
             // For debug
             this.assetRoot.dump();
         }
