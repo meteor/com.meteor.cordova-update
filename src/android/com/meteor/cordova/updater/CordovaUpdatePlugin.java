@@ -137,8 +137,13 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
         AssetManager assetManager = ctx.getResources().getAssets();
 
         synchronized (this) {
-            List<UriRemapper> remappers = new ArrayList<UriRemapper>();
-            remappers.add(new FilesystemUriRemapper(new File(wwwRoot)));
+            FilesystemUriRemapper filesystemUriRemapper = null;
+            File fsRoot = new File(wwwRoot);
+            if (fsRoot.exists()) {
+                filesystemUriRemapper = new FilesystemUriRemapper(fsRoot);
+            } else {
+                Log.w(TAG, "Filesystem root not found; won't scan: " + wwwRoot);
+            }
 
             String androidAssetRoot = cordovajsRoot;
             androidAssetRoot = Utils.stripPrefix(androidAssetRoot, "/android_asset/");
@@ -148,7 +153,41 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
                 androidAssetRoot = "www";
                 Log.w(TAG, "Ignoring provided asset root, using " + androidAssetRoot);
             }
-            remappers.add(new ResourceUriRemapper(assetManager, androidAssetRoot));
+            final ResourceUriRemapper resourceUriRemapper = new ResourceUriRemapper(assetManager, androidAssetRoot);
+
+            // XXX HACKHACK serve cordova.js from the containing folder
+            UriRemapper cordovaUriRemapper = new UriRemapper() {
+                @Override
+                public Uri remapUri(Uri uri) {
+                    String path = uri.getPath();
+
+                    // if ([path isEqualToString:@"/cordova.js"] || [path isEqualToString:@"/cordova_plugins.js"] ||
+                    // [path hasPrefix:@"/plugins/"])
+                    // return [[METEORCordovajsRoot stringByAppendingPathComponent:path] stringByStandardizingPath];
+                    if (path.equals("/cordova.js") || path.equals("/cordova_plugins.js")
+                            || path.startsWith("/plugins/")) {
+                        Log.d(TAG, "Detected cordova URI: " + uri);
+                        Uri remapped = resourceUriRemapper.remapUri(uri);
+                        if (remapped == null) {
+                            Log.w(TAG, "Detected cordova URI, but resource remap failed: " + uri);
+                        }
+                        return remapped;
+                    }
+
+                    return null;
+                }
+            };
+
+            // The precedence order is:
+            // cordova as shipped with app
+            // filesystem hot-code-push files
+            // resources as shipped with app
+            List<UriRemapper> remappers = new ArrayList<UriRemapper>();
+            remappers.add(cordovaUriRemapper);
+            if (filesystemUriRemapper != null) {
+                remappers.add(filesystemUriRemapper);
+            }
+            remappers.add(resourceUriRemapper);
 
             this.wwwRoot = wwwRoot;
             this.cordovajsRoot = cordovajsRoot;
