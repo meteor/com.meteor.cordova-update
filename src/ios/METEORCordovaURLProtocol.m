@@ -95,15 +95,18 @@ NSString *METEORCordovajsRoot;
   // E.g.: relativePath="../Sites_Secret/TopSecret.doc"
   //       documentRoot="/Users/robbie/Sites"
   //           fullPath="/Users/robbie/Sites_Secret/TopSecret"
+  // XXX Actually allow this
 
-  if (![documentRoot hasSuffix:@"/"])
-  {
-    documentRoot = [documentRoot stringByAppendingString:@"/"];
-  }
+  if (false) {
+    if (![documentRoot hasSuffix:@"/"])
+    {
+      documentRoot = [documentRoot stringByAppendingString:@"/"];
+    }
 
-  if (![fullPath hasPrefix:documentRoot])
-  {
-    return nil;
+    if (![fullPath hasPrefix:documentRoot])
+    {
+      return nil;
+    }
   }
 
   // Part 4: Search for index page if path is pointing to a directory
