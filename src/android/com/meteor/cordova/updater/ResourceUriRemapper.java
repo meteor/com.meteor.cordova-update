@@ -1,6 +1,7 @@
 package com.meteor.cordova.updater;
 
 import java.io.Closeable;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -15,8 +16,9 @@ public class ResourceUriRemapper implements UriRemapper {
     final AssetManager assetManager;
 
     public ResourceUriRemapper(AssetManager assetManager, String assetBase) {
-        if (assetBase != "" && !assetBase.endsWith("/")) {
-            assetBase += "/";
+        // Make sure assetBase does not end with slash
+        if (assetBase != "" && assetBase.endsWith("/")) {
+            assetBase = assetBase.substring(0, assetBase.length() - 1);
         }
         this.assetBase = assetBase;
 
@@ -26,11 +28,13 @@ public class ResourceUriRemapper implements UriRemapper {
     @Override
     public Uri remapUri(Uri uri) {
         String path = uri.getPath();
+        assert path.startsWith("/");
+        assert !assetBase.endsWith("/");
 
         String assetPath = assetBase + path;
         Log.d(TAG, "Asset path is " + assetPath);
 
-        if (exists(assetPath)) {
+        if (assetExists(assetPath)) {
             Log.d(TAG, "Remapping to " + "file:///android_asset/" + path);
             return Uri.parse("file:///android_asset/" + path);
         }
@@ -38,12 +42,14 @@ public class ResourceUriRemapper implements UriRemapper {
         return null;
     }
 
-    private boolean exists(String assetPath) {
+    private boolean assetExists(String assetPath) {
         InputStream is = null;
         try {
             is = assetManager.open(assetPath);
+        } catch (FileNotFoundException e) {
+            return false;
         } catch (IOException e) {
-            Log.d(TAG, "Error while opening " + assetPath, e);
+            Log.d(TAG, "Error while opening " + assetPath + "(" + e + ")");
             return false;
         } finally {
             closeQuietly(is);
