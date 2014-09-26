@@ -138,7 +138,14 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
         synchronized (this) {
             UriRemapper appRemapper = null;
 
-            File fsRoot = new File(wwwRoot);
+            File fsRoot;
+            // XXX: This is very iOS specific
+            if (wwwRoot.startsWith("../../Documents/meteor")) {
+                Context ctx = cordova.getActivity().getApplicationContext();
+                fsRoot = new File(ctx.getApplicationInfo().dataDir, wwwRoot.substring(6));
+            } else {
+                fsRoot = new File(wwwRoot);
+            }
             if (fsRoot.exists()) {
                 appRemapper = new FilesystemUriRemapper(fsRoot);
             } else {
@@ -198,8 +205,9 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
             AssetManager assetManager = ctx.getResources().getAssets();
 
             this.assetRoot = new Asset(assetManager, "www");
+
             // For debug
-            this.assetRoot.dump();
+            // this.assetRoot.dump();
         }
         return this.assetRoot;
     }
