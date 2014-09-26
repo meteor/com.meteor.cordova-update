@@ -141,6 +141,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
             File fsRoot = new File(wwwRoot);
             if (fsRoot.exists()) {
                 appRemapper = new FilesystemUriRemapper(fsRoot);
+            } else {
                 Log.w(TAG, "Filesystem root not found; falling back to assets: " + wwwRoot);
 
                 Asset wwwAsset = getAssetRoot().find(wwwRoot);

@@ -31,10 +31,15 @@ public class AssetUriRemapper implements UriRemapper {
         }
 
         // Don't serve directories.
-        // XXX: It is annoying that we have to do a (slow) asset-manager call here
-        if (asset.hasChildren()) {
-            Log.d(TAG, "Found asset, but was directory: " + assetBase.path + "/" + path);
-            return null;
+        // hasChildren is slow... so we use some heuristics
+        if (path.endsWith(".js") || path.endsWith(".js.map") || path.endsWith(".html") || path.endsWith(".css")
+                || path.endsWith(".css.map")) {
+            Log.d(TAG, "Assuming not a directory: " + path);
+        } else {
+            if (asset.hasChildren()) {
+                Log.d(TAG, "Found asset, but was directory: " + assetBase.path + "/" + path);
+                return null;
+            }
         }
 
         Log.d(TAG, "Remapping to " + "file:///android_asset/" + assetBase.path + "/" + path);
