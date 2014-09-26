@@ -87,6 +87,10 @@ public class Asset {
     }
 
     public Asset find(String relativePath) {
+        if (relativePath == null || relativePath.isEmpty()) {
+            return this;
+        }
+
         String path = this.path + "/" + relativePath;
         String[] pathTokens = path.split("/");
 

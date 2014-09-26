@@ -175,7 +175,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
             }
 
             // XXX HACKHACK serve cordova.js from the containing folder
-            Asset cordovaAssetBase = getAssetRoot().find(cordovajsRoot);
+            Asset cordovaAssetBase = getAssetRoot().find(Utils.stripPrefix(cordovajsRoot, "/android_asset/www/"));
             if (cordovaAssetBase == null) {
                 Log.w(TAG, "Could not find asset: " + cordovajsRoot + ", default to www root");
                 cordovaAssetBase = getAssetRoot();
