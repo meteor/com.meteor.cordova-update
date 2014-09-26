@@ -10,19 +10,23 @@ import java.util.Map;
 import android.content.res.AssetManager;
 import android.util.Log;
 
-// The asset API is really slow; cache lookups
+/**
+ * Like File, but for an Asset.
+ * 
+ * The asset API is really slow; so we try to cache/avoid lookups.
+ */
 public class Asset {
     private static final String TAG = "meteor.cordova.updater";
 
-    final State state;
+    final Cache cache;
     final String name;
     final String path;
 
-    static class State {
+    static class Cache {
         final AssetManager assetManager;
         final Map<String, List<Asset>> contents = new HashMap<String, List<Asset>>();
 
-        public State(AssetManager assetManager) {
+        public Cache(AssetManager assetManager) {
             this.assetManager = assetManager;
         }
 
@@ -63,23 +67,32 @@ public class Asset {
         }
     }
 
-    private Asset(State state, String name, String path) {
-        this.state = state;
+    /**
+     * Private constructor for child assets
+     * 
+     * @param cache
+     * @param name
+     * @param path
+     */
+    private Asset(Cache cache, String name, String path) {
+        this.cache = cache;
         this.name = name;
         this.path = path;
         assert !path.endsWith("/");
     }
 
-    // Constructor for root
+    /**
+     * Constructor for root asset
+     */
     public Asset(AssetManager assetManager, String path) {
-        this.state = new State(assetManager);
+        this.cache = new Cache(assetManager);
         this.name = null;
         this.path = path;
         assert !path.endsWith("/");
     }
 
     public boolean hasChildren() {
-        return !state.listAssets(this.path).isEmpty();
+        return !cache.listAssets(this.path).isEmpty();
     }
 
     public boolean exists(String path) {
@@ -123,6 +136,6 @@ public class Asset {
             parentPath.append(pathToken);
         }
 
-        return state.findAsset(parentPath.toString(), name);
+        return cache.findAsset(parentPath.toString(), name);
     }
 }

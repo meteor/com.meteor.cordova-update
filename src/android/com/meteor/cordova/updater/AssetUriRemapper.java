@@ -6,15 +6,25 @@ import java.util.Set;
 import android.net.Uri;
 import android.util.Log;
 
+/**
+ * UriRemapper backed by AssetManager assets
+ *
+ */
 public class AssetUriRemapper implements UriRemapper {
     private static final String TAG = "meteor.cordova.updater";
 
     final Asset assetBase;
 
-    static final Set<String> KNOWN_FILE_EXTENSIONS;
-
+    /**
+     * If true, if a path looksLikeFile(), we will assume it is present and a file without checking. This saves a lot of
+     * AssetManager calls.
+     */
     private boolean assumeFilesArePresent;
 
+    /**
+     * A set of extensions that are used as the test for looksLikeFile()
+     */
+    static final Set<String> KNOWN_FILE_EXTENSIONS;
     static {
         KNOWN_FILE_EXTENSIONS = new HashSet<String>();
 
@@ -95,6 +105,12 @@ public class AssetUriRemapper implements UriRemapper {
     // return true;
     // }
 
+    /**
+     * Checks the filename, to see if looks like a file (and not a directory)
+     * 
+     * Currently this is extension based; we assume there won't be folders named "something.js" (or, if there are, we
+     * assume we won't load index.html from them)
+     */
     private boolean looksLikeFile(String path) {
         int lastDot = path.lastIndexOf('.');
         if (lastDot == -1) {

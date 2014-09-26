@@ -5,6 +5,12 @@ import java.io.File;
 import android.net.Uri;
 import android.util.Log;
 
+/**
+ * UriRemapper backed by filesystem
+ * 
+ * @author meteor
+ * 
+ */
 public class FilesystemUriRemapper implements UriRemapper {
     private static final String TAG = "meteor.cordova.updater";
 

@@ -41,6 +41,11 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
         this.schemes.add("https");
     }
 
+    /**
+     * Overrides uri resolution.
+     * 
+     * Implements remapping, including adding default files (index.html) for directories
+     */
     @Override
     public Uri remapUri(Uri uri) {
         Log.v(TAG, "remapUri " + uri);
@@ -54,11 +59,6 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
         if (host == null || !hosts.contains(host)) {
             Log.d(TAG, "Host is not intercepted: " + host);
             return uri;
-        }
-
-        List<UriRemapper> remappers;
-        synchronized (this) {
-            remappers = this.remappers;
         }
 
         Remapped remapped = remap(uri);
@@ -92,7 +92,18 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
         return uri;
     }
 
+    /**
+     * Helper function that tries all the remappers, to find the first that can remap a Uri
+     * 
+     * @param uri
+     * @return
+     */
     private Remapped remap(Uri uri) {
+        List<UriRemapper> remappers;
+        synchronized (this) {
+            remappers = this.remappers;
+        }
+
         for (UriRemapper remapper : remappers) {
             Remapped remapped = remapper.remapUri(uri);
             if (remapped != null) {
@@ -106,6 +117,9 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
     private static final String ACTION_SET_LOCAL_PATH = "setLocalPath";
     private static final String ACTION_GET_CORDOVAJSROOT = "getCordovajsRoot";
 
+    /**
+     * Entry-point for JS calls from Cordova
+     */
     @Override
     public boolean execute(String action, JSONArray inputs, CallbackContext callbackContext) throws JSONException {
         try {
@@ -145,12 +159,24 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
         return true;
     }
 
+    /**
+     * JS-called function, called after a hot-code-push
+     * 
+     * @param wwwRoot
+     * @param callbackContext
+     */
     private void setLocalPath(String wwwRoot, CallbackContext callbackContext) {
         Log.w(TAG, "setLocalPath(" + wwwRoot + ")");
 
         this.updateLocations(wwwRoot, this.cordovajsRoot);
     }
 
+    /**
+     * Helper function that sets up the resolver ordering
+     * 
+     * @param wwwRoot
+     * @param cordovajsRoot
+     */
     private void updateLocations(String wwwRoot, String cordovajsRoot) {
         synchronized (this) {
             UriRemapper appRemapper = null;
@@ -229,12 +255,24 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
         return this.assetRoot;
     }
 
+    /**
+     * JS-called function, that returns cordovajsRoot as set previously
+     * 
+     * @param callbackContext
+     * @return
+     */
     private String getCordovajsRoot(CallbackContext callbackContext) {
         Log.w(TAG, "getCordovajsRoot");
 
         return this.cordovajsRoot;
     }
 
+    /**
+     * JS-called function, that starts the url interception
+     * 
+     * @param callbackContext
+     * @return
+     */
     private String startServer(String wwwRoot, String cordovaRoot, CallbackContext callbackContext)
             throws JSONException {
         Log.w(TAG, "startServer(" + wwwRoot + "," + cordovaRoot + ")");
