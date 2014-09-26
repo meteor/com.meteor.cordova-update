@@ -56,7 +56,7 @@ public class AssetUriRemapper implements UriRemapper {
 
         if (assumeFilesArePresent && looksLikeFile(path)) {
             Uri assetUri = Uri.parse("file:///android_asset/" + assetBase.path + "/" + path);
-            return new Remapped(assetUri, true);
+            return new Remapped(assetUri, false);
         }
 
         Asset asset = assetBase.find(path);

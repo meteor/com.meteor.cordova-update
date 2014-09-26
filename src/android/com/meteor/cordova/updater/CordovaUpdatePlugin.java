@@ -77,11 +77,13 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
             Uri defaultPage = Uri.withAppendedPath(uri, DEFAULT_PAGE);
 
             remapped = remap(defaultPage);
-            if (remapped.isDirectory) {
-                Log.d(TAG, "Found asset, but was directory: " + remapped.uri);
-            } else {
-                Log.d(TAG, "Remapping to " + remapped.uri);
-                return remapped.uri;
+            if (remapped != null) {
+                if (remapped.isDirectory) {
+                    Log.d(TAG, "Found asset, but was directory: " + remapped.uri);
+                } else {
+                    Log.d(TAG, "Remapping to " + remapped.uri);
+                    return remapped.uri;
+                }
             }
         }
 
