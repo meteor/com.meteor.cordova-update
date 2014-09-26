@@ -30,7 +30,6 @@ NSString *METEORCordovajsRoot;
 
 - (void)startLoading
 {
-  NSLog(@"startLoading for url %@", [[[self request] URL] absoluteString]);
   NSString *filePath = [self filePathForURI:[[[self request] URL] path] allowDirectory:NO];
 
   BOOL isDir = NO;
@@ -41,9 +40,8 @@ NSString *METEORCordovajsRoot;
     filePath = [self filePathForURI:@"/" allowDirectory:NO];
   }
 
-  NSLog(@"filePath is %@", filePath);
 
-  NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:filePath]];
+  NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:filePath]];
 
   NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[[self request] URL] statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:@{}];
 
@@ -62,8 +60,8 @@ NSString *METEORCordovajsRoot;
 **/
 - (NSString *)filePathForURI:(NSString *)path allowDirectory:(BOOL)allowDirectory
 {
-  NSString *documentRoot = METEORDocumentRoot;
-
+  NSString* basePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"www"];
+  NSString *documentRoot = [NSString stringWithFormat:@"%@/%@", basePath, METEORDocumentRoot];
   // Part 1: Strip parameters from the url
   // E.g.: /page.html?q=22&var=abc -> /page.html
 
