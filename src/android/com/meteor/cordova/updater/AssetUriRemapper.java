@@ -37,6 +37,9 @@ public class AssetUriRemapper implements UriRemapper {
     public AssetUriRemapper(Asset assetBase) {
         this.assetBase = assetBase;
 
+        if (assetBase == null) {
+            throw new IllegalArgumentException();
+        }
     }
 
     @Override
