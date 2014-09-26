@@ -30,7 +30,7 @@ extern NSString *METEORCordovajsRoot;
 
   [NSURLProtocol registerClass:[METEORCordovaURLProtocol class]];
 
-  [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"meteor.local"] callbackId:command.callbackId];
+  [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"http://meteor.local"] callbackId:command.callbackId];
 }
 
 - (void)setLocalPath:(CDVInvokedUrlCommand*)command
