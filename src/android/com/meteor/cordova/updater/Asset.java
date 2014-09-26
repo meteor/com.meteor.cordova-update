@@ -50,7 +50,8 @@ public class Asset {
             } else {
                 children = new ArrayList<Asset>(assets.length);
                 for (String asset : assets) {
-                    children.add(new Asset(this, asset, path + "/" + asset));
+                    String childPath = (path.length() != 0) ? (path + "/" + asset) : asset;
+                    children.add(new Asset(this, asset, childPath));
                 }
             }
             this.children = children;
