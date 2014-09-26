@@ -1,9 +1,8 @@
 package com.meteor.cordova.updater;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-
-import com.meteor.cordova.updater.direct.Utils;
 
 import android.content.res.AssetManager;
 import android.net.Uri;
@@ -47,9 +46,20 @@ public class ResourceUriRemapper implements UriRemapper {
             Log.d(TAG, "Error while opening " + assetPath, e);
             return false;
         } finally {
-            Utils.closeQuietly(is);
+            closeQuietly(is);
         }
         return true;
+    }
+
+    private void closeQuietly(Closeable closeable) {
+        if (closeable == null) {
+            return;
+        }
+        try {
+            closeable.close();
+        } catch (IOException e) {
+            Log.w(TAG, "Error closing: " + closeable, e);
+        }
     }
 
 }
