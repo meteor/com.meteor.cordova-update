@@ -79,6 +79,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
         }
 
         // No remapping; return unaltered
+        Log.d(TAG, "No remapping for " + uri);
         return uri;
     }
 
@@ -142,6 +143,11 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
             String androidAssetRoot = cordovajsRoot;
             androidAssetRoot = Utils.stripPrefix(androidAssetRoot, "/android_asset/");
             androidAssetRoot = Utils.stripPrefix(androidAssetRoot, "/");
+
+            if (!androidAssetRoot.equals("www")) {
+                androidAssetRoot = "www";
+                Log.w(TAG, "Ignoring provided asset root, using " + androidAssetRoot);
+            }
             remappers.add(new ResourceUriRemapper(assetManager, androidAssetRoot));
 
             this.wwwRoot = wwwRoot;
