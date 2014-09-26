@@ -31,6 +31,8 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
     private String wwwRoot;
     private String cordovajsRoot;
 
+    Asset assetRoot;
+
     public CordovaUpdatePlugin() {
         this.hosts.add(DEFAULT_HOST);
         this.schemes.add("http");
@@ -133,9 +135,6 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
     }
 
     private void updateLocations(String wwwRoot, String cordovajsRoot) {
-        Context ctx = cordova.getActivity().getApplicationContext();
-        AssetManager assetManager = ctx.getResources().getAssets();
-
         synchronized (this) {
             FilesystemUriRemapper filesystemUriRemapper = null;
             File fsRoot = new File(wwwRoot);
@@ -153,7 +152,24 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
                 androidAssetRoot = "www";
                 Log.w(TAG, "Ignoring provided asset root, using " + androidAssetRoot);
             }
-            final ResourceUriRemapper resourceUriRemapper = new ResourceUriRemapper(assetManager, androidAssetRoot);
+
+            // // Make sure assetBase does not end with slash
+            // if (androidAssetRoot.endsWith("/")) {
+            // androidAssetRoot = androidAssetRoot.substring(0, assetBase.length() - 1);
+            // }
+            //
+            // this.assetManager = assetManager;
+            // this.assetBase = new Asset(null, assetBase);
+            //
+            // // For debug...
+            // this.assetBase.dump();
+            String androidAssetPath = wwwRoot;
+            Asset assetDir = getAssetRoot().find(androidAssetPath);
+            if (assetDir == null) {
+                Log.w(TAG, "Could not find asset: " + androidAssetPath + ", default to www");
+                assetDir = getAssetRoot().find("www");
+            }
+            final AssetUriRemapper resourceUriRemapper = new AssetUriRemapper(assetDir);
 
             // XXX HACKHACK serve cordova.js from the containing folder
             UriRemapper cordovaUriRemapper = new UriRemapper() {
@@ -193,6 +209,18 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
             this.cordovajsRoot = cordovajsRoot;
             this.remappers = remappers;
         }
+    }
+
+    private Asset getAssetRoot() {
+        if (this.assetRoot == null) {
+            Context ctx = cordova.getActivity().getApplicationContext();
+            AssetManager assetManager = ctx.getResources().getAssets();
+
+            this.assetRoot = new Asset(assetManager, "");
+            // For debug
+            this.assetRoot.dump();
+        }
+        return this.assetRoot;
     }
 
     private String getCordovajsRoot(CallbackContext callbackContext) {
