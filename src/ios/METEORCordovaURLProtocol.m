@@ -30,7 +30,10 @@ NSString *METEORCordovajsRoot;
 
 - (void)startLoading
 {
-  NSString *filePath = [self filePathForURI:[[[self request] URL] path] allowDirectory:NO];
+  NSString *path = [self.request.URL.path stringByAddingPercentEncodingWithAllowedCharacters:
+    [NSCharacterSet URLHostAllowedCharacterSet]];
+
+  NSString *filePath = [self filePathForURI:path allowDirectory:NO];
 
   BOOL isDir = NO;
 
