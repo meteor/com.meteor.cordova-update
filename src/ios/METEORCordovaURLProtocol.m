@@ -3,6 +3,8 @@
 NSString *METEORDocumentRoot;
 NSString *METEORCordovajsRoot;
 
+NSDictionary *MimeTypeMappings = nil;
+
 @protocol METEORCordovaURLProtocol
 
 - (NSString *)filePathForURI:(NSString *)path allowDirectory:(BOOL)allowDirectory;
@@ -49,7 +51,13 @@ NSString *METEORCordovajsRoot;
   NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
   NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithURL:[NSURL fileURLWithPath:filePath]];
 
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[[self request] URL] statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:@{}];
+  // set the content-type header if the extension is known
+  NSDictionary *headers = @{};
+  if (MimeTypeMappings[[path pathExtension]]) {
+    headers = @{@"Content-Type": MimeTypeMappings[[path pathExtension]]};
+  }
+
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[[self request] URL] statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:headers];
 
   [[self client] URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed]; // we handle caching ourselves.
 
@@ -170,5 +178,4 @@ NSString *METEORCordovajsRoot;
 }
 
 @end
-
 
