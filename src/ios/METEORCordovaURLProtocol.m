@@ -83,8 +83,7 @@ NSString *METEORCordovajsRoot;
 **/
 - (NSString *)filePathForURI:(NSString *)path allowDirectory:(BOOL)allowDirectory
 {
-  NSString* basePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"www"];
-  NSString *documentRoot = [NSString stringWithFormat:@"%@/%@", basePath, METEORDocumentRoot];
+  NSString *documentRoot = METEORDocumentRoot;
   // Part 1: Strip parameters from the url
   // E.g.: /page.html?q=22&var=abc -> /page.html
 
