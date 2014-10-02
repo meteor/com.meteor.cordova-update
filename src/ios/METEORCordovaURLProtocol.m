@@ -43,6 +43,8 @@ NSString *METEORCordovajsRoot;
     filePath = [self filePathForURI:@"/" allowDirectory:NO];
   }
 
+  NSLog(@"METEOR CORDOVA DEBUG loading filepath: %@ for path: %@", filePath, path);
+
   NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
   NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
   NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithURL:[NSURL fileURLWithPath:filePath]];
