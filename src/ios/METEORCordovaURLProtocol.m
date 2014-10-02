@@ -83,8 +83,7 @@ NSString *METEORCordovajsRoot;
 **/
 - (NSString *)filePathForURI:(NSString *)path allowDirectory:(BOOL)allowDirectory
 {
-  NSString* basePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"www"];
-  NSString *documentRoot = [NSString stringWithFormat:@"%@/%@", basePath, METEORDocumentRoot];
+  NSString *documentRoot = METEORDocumentRoot;
   // Part 1: Strip parameters from the url
   // E.g.: /page.html?q=22&var=abc -> /page.html
 
@@ -156,8 +155,9 @@ NSString *METEORCordovajsRoot;
   }
 
   // XXX HACKHACK serve cordova.js from the containing folder
-  if ([path isEqualToString:@"/cordova.js"] || [path isEqualToString:@"/cordova_plugins.js"] || [path hasPrefix:@"/plugins/"])
-    return [[METEORCordovajsRoot stringByAppendingPathComponent:path] stringByStandardizingPath];
+  NSString *decodedPath = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+  if ([decodedPath isEqualToString:@"/cordova.js"] || [decodedPath isEqualToString:@"/cordova_plugins.js"] || [decodedPath hasPrefix:@"/plugins/"])
+    return [[METEORCordovajsRoot stringByAppendingPathComponent:decodedPath] stringByStandardizingPath];
 
   return fullPath;
 }
@@ -168,4 +168,5 @@ NSString *METEORCordovajsRoot;
 }
 
 @end
+
 
