@@ -194,7 +194,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
             } else {
                 Log.w(TAG, "Filesystem root not found; falling back to assets: " + wwwRoot);
 
-                Asset wwwAsset = getAssetRoot().find(wwwRoot);
+                Asset wwwAsset = getAssetRoot().find(Utils.stripPrefix(wwwRoot, "/android_asset/www/"));
                 if (wwwAsset == null) {
                     Log.w(TAG, "Could not find asset: " + wwwRoot + ", default to asset root");
                     wwwAsset = getAssetRoot();
