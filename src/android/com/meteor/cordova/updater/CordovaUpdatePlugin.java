@@ -183,12 +183,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
 
             File fsRoot;
             // XXX: This is very iOS specific
-            if (wwwRoot.startsWith("../../Documents/meteor")) {
-                Context ctx = cordova.getActivity().getApplicationContext();
-                fsRoot = new File(ctx.getApplicationInfo().dataDir, wwwRoot.substring(6));
-            } else {
-                fsRoot = new File(wwwRoot);
-            }
+            fsRoot = new File(wwwRoot);
             if (fsRoot.exists()) {
                 appRemapper = new FilesystemUriRemapper(fsRoot);
             } else {
