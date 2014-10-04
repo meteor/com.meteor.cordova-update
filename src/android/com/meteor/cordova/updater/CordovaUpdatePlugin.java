@@ -63,6 +63,15 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
 
         Remapped remapped = remap(uri);
 
+        if (remapped == null) {
+            // If e.g. /lists/doesnotexist is not found, we will try to serve /index.html
+            // XXX: This needs a double-check, to make sure it works the same as ./packages/webapp/webapp_server.js
+            // (if uri was /index.html, we will recheck it, but not a big deal)
+            Uri defaultPage = uri.buildUpon().path(DEFAULT_PAGE).build();
+            Log.d(TAG, "Unable to find " + uri + ", will try " + defaultPage);
+            remapped = remap(defaultPage);
+        }
+
         if (remapped != null) {
             if (remapped.isDirectory) {
                 Log.d(TAG, "Found asset, but was directory: " + remapped.uri);
