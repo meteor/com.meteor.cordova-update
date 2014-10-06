@@ -37,6 +37,9 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
 
     public CordovaUpdatePlugin() {
         this.hosts.add(DEFAULT_HOST);
+        this.hosts.add("localhost");
+        this.hosts.add("127.0.0.1");
+
         this.schemes.add("http");
         this.schemes.add("https");
     }
@@ -241,9 +244,38 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
                 }
             };
 
+            UriRemapper localhostRemapper = new UriRemapper() {
+                @Override
+                public Remapped remapUri(Uri uri) {
+                    String host = uri.getHost();
+                    String path = uri.getPath();
+                    String scheme = uri.getScheme();
+
+                    if (host != "localhost" && host != "127.0.0.1") {
+                        return null;
+                    }
+
+                    if (scheme != "http") {
+                        // only support http:// for localhost URLs, not https://
+                        return null;
+                    }
+
+                    // Note that we are not checking the port here! In
+                    // future it might be nice if we only remap
+                    // localhost:n where n is the port that the Meteor
+                    // development server is listening on.
+
+                    Uri.Builder builder = uri.buildUpon();
+                    builder.authority("10.0.2.2");
+                    Remapped remapped = new Remapped(remappedUri, false);
+                    return remapped;
+                }
+            };
+
             List<UriRemapper> remappers = new ArrayList<UriRemapper>();
             remappers.add(cordovaUriRemapper);
             remappers.add(appRemapper);
+            remappers.add(localhostRemapper);
 
             this.wwwRoot = wwwRoot;
             this.cordovajsRoot = cordovajsRoot;
