@@ -251,11 +251,11 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
                     String path = uri.getPath();
                     String scheme = uri.getScheme();
 
-                    if (host != "localhost" && host != "127.0.0.1") {
+                    if (!host.equals("localhost") && !host.equals("127.0.0.1")) {
                         return null;
                     }
 
-                    if (scheme != "http") {
+                    if (!scheme.equals"http")) {
                         // only support http:// for localhost URLs, not https://
                         return null;
                     }
