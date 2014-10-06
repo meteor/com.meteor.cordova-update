@@ -267,6 +267,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
 
                     Uri.Builder builder = uri.buildUpon();
                     builder.authority("10.0.2.2");
+                    Uri remappedUri = builder.build();
                     Remapped remapped = new Remapped(remappedUri, false);
                     return remapped;
                 }
