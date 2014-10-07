@@ -250,6 +250,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
                     String host = uri.getHost();
                     String path = uri.getPath();
                     String scheme = uri.getScheme();
+                    int port = uri.getPort();
 
                     Log.v(TAG, "Rewriting: " + uri + " host: " + host + " scheme: " + scheme);
 
@@ -268,7 +269,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
                     // development server is listening on.
 
                     Uri.Builder builder = uri.buildUpon();
-                    builder.authority("10.0.2.2");
+                    builder.authority("10.0.2.2:" + port);
                     Uri remappedUri = builder.build();
                     Log.v(TAG, "Remapped URI:" + remappedUri);
                     Remapped remapped = new Remapped(remappedUri, false);
