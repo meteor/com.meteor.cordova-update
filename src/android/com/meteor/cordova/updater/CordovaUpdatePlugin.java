@@ -269,7 +269,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
                     // development server is listening on.
 
                     Uri.Builder builder = uri.buildUpon();
-                    builder.authority("10.0.2.2:" + port);
+                    builder.encodedAuthority("10.0.2.2:" + port);
                     Uri remappedUri = builder.build();
                     Log.v(TAG, "Remapped URI:" + remappedUri);
                     Remapped remapped = new Remapped(remappedUri, false);
