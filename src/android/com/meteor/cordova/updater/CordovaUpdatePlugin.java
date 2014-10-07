@@ -251,11 +251,13 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
                     String path = uri.getPath();
                     String scheme = uri.getScheme();
 
+                    Log.v(TAG, "Rewriting: " + uri + " host: " + host + " scheme: " + scheme);
+
                     if (!host.equals("localhost") && !host.equals("127.0.0.1")) {
                         return null;
                     }
 
-                    if (!scheme.equals"http")) {
+                    if (!scheme.equals("http")) {
                         // only support http:// for localhost URLs, not https://
                         return null;
                     }
@@ -268,6 +270,7 @@ public class CordovaUpdatePlugin extends CordovaPlugin {
                     Uri.Builder builder = uri.buildUpon();
                     builder.authority("10.0.2.2");
                     Uri remappedUri = builder.build();
+                    Log.v(TAG, "Remapped URI:" + remappedUri);
                     Remapped remapped = new Remapped(remappedUri, false);
                     return remapped;
                 }
