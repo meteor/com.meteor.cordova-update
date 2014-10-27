@@ -51,11 +51,16 @@ NSDictionary *MimeTypeMappings = nil;
   NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
   NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithURL:[NSURL fileURLWithPath:filePath]];
 
+
   // set the content-type header if the extension is known
-  NSDictionary *headers = @{};
+    NSMutableDictionary *headers = [[NSMutableDictionary alloc] init];
   if (MimeTypeMappings[[path pathExtension]]) {
-    headers = @{@"Content-Type": MimeTypeMappings[[path pathExtension]]};
+      [headers setValue:MimeTypeMappings[[path pathExtension]] forKey:@"Content-Type"];
   }
+    [headers setValue:@"private, max-age=31536000" forKey:@"cache-control"];
+    [headers setValue:@"Mon, 27 Oct 2014 22:54:03 GMT" forKey:@"date"];
+    [headers setValue:@"Mon, 27 Oct 2014 22:54:03 GMT" forKey:@"expires"];
+    [headers setValue:@"Wed, 09 Oct 2014 22:54:03 GMT" forKey:@"last-modified"];
 
   NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[[self request] URL] statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:headers];
 
